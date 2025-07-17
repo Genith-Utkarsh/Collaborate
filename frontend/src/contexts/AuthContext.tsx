@@ -34,14 +34,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Load token from localStorage on mount
   useEffect(() => {
-    const savedToken = localStorage.getItem('auth_token');
-    if (savedToken) {
-      setToken(savedToken);
-      api.setToken(savedToken);
-      fetchCurrentUser();
-    } else {
-      setIsLoading(false);
-    }
+    const initializeAuth = async () => {
+      const savedToken = localStorage.getItem('auth_token');
+      
+      if (savedToken) {
+        setToken(savedToken);
+        api.setToken(savedToken);
+        await fetchCurrentUser();
+      } else {
+        setIsLoading(false);
+      }
+    };
+    
+    initializeAuth();
   }, []);
 
   // Fetch current user data
@@ -65,6 +70,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string) => {
     try {
       setIsLoading(true);
+      
       const response = await api.login({ email, password }) as { data: { user: User; token: string } };
       
       const { user: userData, token: authToken } = response.data;
@@ -73,7 +79,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setToken(authToken);
       api.setToken(authToken);
       localStorage.setItem('auth_token', authToken);
+      
     } catch (error: any) {
+      console.error('Login failed:', error);
       throw new Error(error.message || 'Login failed');
     } finally {
       setIsLoading(false);

@@ -3,7 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Edit, Trash2, Plus, Github, ExternalLink, Star, GitFork, Users, Heart } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { getLanguageClass } from '@/utils/languages';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Project {
   _id: string;
@@ -28,20 +30,29 @@ export default function MyProjectsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
 
   useEffect(() => {
-    fetchMyProjects();
-  }, []);
+    if (!isLoading && !isAuthenticated) {
+      router.push('/login');
+      return;
+    }
+    
+    if (isAuthenticated) {
+      fetchMyProjects();
+    }
+  }, [isAuthenticated, isLoading, router]);
 
   const fetchMyProjects = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('auth_token');
       if (!token) {
-        window.location.href = '/login';
+        router.push('/login');
         return;
       }
 
-      const response = await fetch('http://localhost:5001/api/projects/my-projects', {
+      const response = await fetch('http://localhost:5000/api/projects/my-projects', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -64,8 +75,8 @@ export default function MyProjectsPage() {
     if (!confirm('Are you sure you want to delete this project?')) return;
 
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5001/api/projects/${projectId}`, {
+      const token = localStorage.getItem('auth_token');
+      const response = await fetch(`http://localhost:5000/api/projects/${projectId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -141,13 +152,28 @@ export default function MyProjectsPage() {
             </div>
 
             {/* Right Side Actions */}
-            <div className="flex items-center">
-              <Link 
-                href="/login" 
-                className="bg-white text-black px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-all duration-200 transform hover:scale-105"
-              >
-                Login
-              </Link>
+            <div className="flex items-center space-x-4">
+              {isAuthenticated && user && (
+                <span className="text-sm text-gray-300">Welcome, {user.name}!</span>
+              )}
+              {isAuthenticated ? (
+                <button
+                  onClick={() => {
+                    logout();
+                    router.push('/');
+                  }}
+                  className="bg-red-600 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-red-700 transition-all duration-200 transform hover:scale-105"
+                >
+                  Sign Out
+                </button>
+              ) : (
+                <Link 
+                  href="/login" 
+                  className="bg-white text-black px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-all duration-200 transform hover:scale-105"
+                >
+                  Login
+                </Link>
+              )}
             </div>
           </div>
         </div>

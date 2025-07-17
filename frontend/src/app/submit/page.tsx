@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Upload, Github, Link as LinkIcon, Tag, Users } from 'lucide-react';
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface ProjectFormData {
   name: string;
@@ -32,6 +33,7 @@ const POPULAR_TAGS = [
 
 export default function SubmitProjectPage() {
   const router = useRouter();
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
   const [formData, setFormData] = useState<ProjectFormData>({
     name: '',
     ownerName: '',
@@ -43,6 +45,21 @@ export default function SubmitProjectPage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push('/login');
+      return;
+    }
+    
+    // Pre-fill owner name if user is authenticated
+    if (isAuthenticated && user && !formData.ownerName) {
+      setFormData(prev => ({
+        ...prev,
+        ownerName: user.name
+      }));
+    }
+  }, [isAuthenticated, isLoading, user, router, formData.ownerName]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -82,7 +99,7 @@ export default function SubmitProjectPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
         },
         body: JSON.stringify({
           title: formData.name,
@@ -152,13 +169,28 @@ export default function SubmitProjectPage() {
             </div>
 
             {/* Right Side Actions */}
-            <div className="flex items-center">
-              <Link 
-                href="/login" 
-                className="bg-white text-black px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-all duration-200 transform hover:scale-105"
-              >
-                Login
-              </Link>
+            <div className="flex items-center space-x-4">
+              {isAuthenticated && user && (
+                <span className="text-sm text-gray-300">Welcome, {user.name}!</span>
+              )}
+              {isAuthenticated ? (
+                <button
+                  onClick={() => {
+                    logout();
+                    router.push('/');
+                  }}
+                  className="bg-red-600 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-red-700 transition-all duration-200 transform hover:scale-105"
+                >
+                  Sign Out
+                </button>
+              ) : (
+                <Link 
+                  href="/login" 
+                  className="bg-white text-black px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-all duration-200 transform hover:scale-105"
+                >
+                  Login
+                </Link>
+              )}
             </div>
           </div>
         </div>

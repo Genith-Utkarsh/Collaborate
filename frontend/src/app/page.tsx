@@ -1,9 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { Github, Star, Users, Code, GitFork, ArrowRight, ExternalLink } from 'lucide-react';
+import { Github, Star, Users, Code, GitFork, ArrowRight, ExternalLink, LogOut, User } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function HomePage() {
+  const { user, isAuthenticated, logout } = useAuth();
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Navigation */}
@@ -47,13 +49,32 @@ export default function HomePage() {
             </div>
 
             {/* Right Side Actions */}
-            <div className="flex items-center">
-              <Link 
-                href="/login" 
-                className="bg-white text-black px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-all duration-200 transform hover:scale-105"
-              >
-                Login
-              </Link>
+            <div className="flex items-center space-x-3">
+              {isAuthenticated ? (
+                <>
+                  <Link 
+                    href="/dashboard" 
+                    className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200"
+                  >
+                    <User className="w-4 h-4" />
+                    <span>{user?.name || 'Profile'}</span>
+                  </Link>
+                  <button 
+                    onClick={logout}
+                    className="flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-red-700 transition-all duration-200 transform hover:scale-105"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Sign Out</span>
+                  </button>
+                </>
+              ) : (
+                <Link 
+                  href="/login" 
+                  className="bg-white text-black px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-all duration-200 transform hover:scale-105"
+                >
+                  Login
+                </Link>
+              )}
             </div>
           </div>
         </div>

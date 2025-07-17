@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { User, Users, Code, Heart, Plus, TrendingUp, Calendar, Github, Star, GitFork } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface DashboardStats {
   totalProjects: number;
@@ -19,38 +20,27 @@ export default function DashboardPage() {
     totalViews: 0,
     recentProjects: []
   });
-  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
 
   useEffect(() => {
-    const token = localStorage.getItem('auth_token');
-    if (!token) {
+    if (!isLoading && !isAuthenticated) {
       router.push('/login');
       return;
     }
     
-    fetchDashboardData();
-  }, [router]);
+    if (isAuthenticated && user) {
+      fetchDashboardData();
+    }
+  }, [isAuthenticated, isLoading, user, router]);
 
   const fetchDashboardData = async () => {
     try {
       const token = localStorage.getItem('auth_token');
       
-      // Fetch user profile
-      const userResponse = await fetch('http://localhost:5001/api/users/profile', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (userResponse.ok) {
-        const userData = await userResponse.json();
-        setUser(userData.data);
-      }
-
       // Fetch user's projects
-      const projectsResponse = await fetch('http://localhost:5001/api/projects/my-projects', {
+      const projectsResponse = await fetch('http://localhost:5000/api/projects/my-projects', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -77,7 +67,7 @@ export default function DashboardPage() {
     }
   };
 
-  if (loading) {
+  if (isLoading || loading) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
@@ -131,13 +121,19 @@ export default function DashboardPage() {
             </div>
 
             {/* Right Side Actions */}
-            <div className="flex items-center">
-              <Link 
-                href="/login" 
-                className="bg-white text-black px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-all duration-200 transform hover:scale-105"
+            <div className="flex items-center space-x-4">
+              {user && (
+                <span className="text-sm text-gray-300">Welcome, {user.name}!</span>
+              )}
+              <button
+                onClick={() => {
+                  logout();
+                  router.push('/');
+                }}
+                className="bg-red-600 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-red-700 transition-all duration-200 transform hover:scale-105"
               >
-                Login
-              </Link>
+                Sign Out
+              </button>
             </div>
           </div>
         </div>

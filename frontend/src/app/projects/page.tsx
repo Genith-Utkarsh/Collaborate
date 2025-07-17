@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, Heart, Github, ExternalLink, Star, GitFork, Users } from 'lucide-react';
+import { Search, Filter, Heart, Github, ExternalLink, Star, GitFork, Users, User, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { getLanguageClass } from '@/utils/languages';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Project {
   _id: string;
@@ -53,6 +54,7 @@ const SORT_OPTIONS = [
 ];
 
 export default function ProjectsPage() {
+  const { user, isAuthenticated, logout } = useAuth();
   const [projects, setProjects] = useState<Project[]>([]);
   const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
@@ -71,7 +73,7 @@ export default function ProjectsPage() {
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/projects');
+      const response = await fetch('http://localhost:5000/api/projects');
       if (!response.ok) {
         throw new Error('Failed to fetch projects');
       }
@@ -125,14 +127,14 @@ export default function ProjectsPage() {
 
   const handleLike = async (projectId: string) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('auth_token');
       if (!token) {
         // Redirect to login
         window.location.href = '/login';
         return;
       }
 
-      const response = await fetch(`http://localhost:5001/api/projects/${projectId}/like`, {
+      const response = await fetch(`http://localhost:5000/api/projects/${projectId}/like`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -204,13 +206,32 @@ export default function ProjectsPage() {
             </div>
 
             {/* Right Side Actions */}
-            <div className="flex items-center">
-              <Link 
-                href="/login" 
-                className="bg-white text-black px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-all duration-200 transform hover:scale-105"
-              >
-                Login
-              </Link>
+            <div className="flex items-center space-x-3">
+              {isAuthenticated ? (
+                <>
+                  <Link 
+                    href="/dashboard" 
+                    className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200"
+                  >
+                    <User className="w-4 h-4" />
+                    <span>{user?.name || 'Profile'}</span>
+                  </Link>
+                  <button 
+                    onClick={logout}
+                    className="flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-red-700 transition-all duration-200 transform hover:scale-105"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Sign Out</span>
+                  </button>
+                </>
+              ) : (
+                <Link 
+                  href="/login" 
+                  className="bg-white text-black px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-all duration-200 transform hover:scale-105"
+                >
+                  Login
+                </Link>
+              )}
             </div>
           </div>
         </div>

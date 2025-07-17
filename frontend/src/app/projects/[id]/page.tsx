@@ -45,7 +45,7 @@ export default function ProjectDetailPage() {
 
   useEffect(() => {
     // Check if user is authenticated
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('auth_token');
     if (!token) {
       router.push('/login');
       return;
@@ -75,7 +75,7 @@ export default function ProjectDetailPage() {
     if (!project) return;
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('auth_token');
       if (!token) {
         router.push('/login');
         return;
