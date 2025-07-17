@@ -7,38 +7,52 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Navigation */}
-      <nav className="fixed top-0 z-50 w-full bg-black/80 backdrop-blur-sm border-b border-gray-800">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="fixed top-0 z-50 w-full bg-black/95 backdrop-blur-md border-b border-gray-800/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-md flex items-center justify-center">
-                <Code className="w-4 h-4 text-white" />
+            {/* Logo */}
+            <div className="flex items-center">
+              <Link href="/" className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <Code className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-xl font-bold text-white">VIT Collaborate</span>
+              </Link>
+            </div>
+
+            {/* Center Navigation */}
+            <div className="hidden md:flex items-center justify-center flex-1">
+              <div className="bg-gray-900/90 backdrop-blur-sm rounded-full px-1 py-1 border border-gray-700/50">
+                <div className="flex items-center space-x-1">
+                  <Link 
+                    href="/projects" 
+                    className="px-6 py-2 rounded-full text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800/50 transition-all duration-200"
+                  >
+                    Projects
+                  </Link>
+                  <Link 
+                    href="/my-projects" 
+                    className="px-6 py-2 rounded-full text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800/50 transition-all duration-200"
+                  >
+                    My Projects
+                  </Link>
+                  <Link 
+                    href="/submit" 
+                    className="px-6 py-2 rounded-full text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800/50 transition-all duration-200"
+                  >
+                    Submit
+                  </Link>
+                </div>
               </div>
-              <span className="text-xl font-semibold">Collaborate</span>
             </div>
-            <div className="hidden md:flex items-center space-x-8">
-              <Link href="/projects" className="text-gray-400 hover:text-white transition-colors text-sm">
-                Projects
-              </Link>
-              <Link href="/my-projects" className="text-gray-400 hover:text-white transition-colors text-sm">
-                My Projects
-              </Link>
-              <Link href="/about" className="text-gray-400 hover:text-white transition-colors text-sm">
-                About
-              </Link>
-              <Link href="/contact" className="text-gray-400 hover:text-white transition-colors text-sm">
-                Contact
-              </Link>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link href="/login" className="text-gray-400 hover:text-white transition-colors text-sm">
-                Sign In
-              </Link>
+
+            {/* Right Side Actions */}
+            <div className="flex items-center">
               <Link 
-                href="/register" 
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:from-blue-500 hover:to-purple-500 transition-all duration-200 transform hover:scale-105"
+                href="/login" 
+                className="bg-white text-black px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-all duration-200 transform hover:scale-105"
               >
-                Get Started
+                Login
               </Link>
             </div>
           </div>

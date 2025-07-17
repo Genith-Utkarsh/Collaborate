@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Upload, Github, Link as LinkIcon, Tag } from 'lucide-react';
+import { Upload, Github, Link as LinkIcon, Tag, Users } from 'lucide-react';
 import Link from 'next/link';
 
 interface ProjectFormData {
@@ -112,20 +112,53 @@ export default function SubmitProjectPage() {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Navigation */}
-      <nav className="fixed top-0 z-50 w-full bg-black/80 backdrop-blur-sm border-b border-gray-800">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="fixed top-0 z-50 w-full bg-black/95 backdrop-blur-md border-b border-gray-800/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-md flex items-center justify-center">
-                <Upload className="w-4 h-4 text-white" />
-              </div>
-              <Link href="/" className="text-xl font-semibold">Collaborate</Link>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link href="/projects" className="text-gray-400 hover:text-white transition-colors text-sm">
-                Projects
+            {/* Logo */}
+            <div className="flex items-center">
+              <Link href="/" className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <Upload className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-xl font-bold text-white">VIT Collaborate</span>
               </Link>
-              <div className="text-gray-400 text-sm">Profile</div>
+            </div>
+
+            {/* Center Navigation */}
+            <div className="hidden md:flex items-center justify-center flex-1">
+              <div className="bg-gray-900/90 backdrop-blur-sm rounded-full px-1 py-1 border border-gray-700/50">
+                <div className="flex items-center space-x-1">
+                  <Link 
+                    href="/projects" 
+                    className="px-6 py-2 rounded-full text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800/50 transition-all duration-200"
+                  >
+                    Projects
+                  </Link>
+                  <Link 
+                    href="/my-projects" 
+                    className="px-6 py-2 rounded-full text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800/50 transition-all duration-200"
+                  >
+                    My Projects
+                  </Link>
+                  <Link 
+                    href="/submit" 
+                    className="px-6 py-2 rounded-full text-sm font-medium text-white bg-gray-800/50 transition-all duration-200"
+                  >
+                    Submit
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Side Actions */}
+            <div className="flex items-center">
+              <Link 
+                href="/login" 
+                className="bg-white text-black px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-200 transition-all duration-200 transform hover:scale-105"
+              >
+                Login
+              </Link>
             </div>
           </div>
         </div>
