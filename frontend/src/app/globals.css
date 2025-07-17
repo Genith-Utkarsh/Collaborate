@@ -1,0 +1,296 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #000000;
+  color: #ffffff;
+  scroll-behavior: smooth;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Selection */
+::selection {
+  background: rgba(59, 130, 246, 0.3);
+  color: white;
+}
+
+/* Focus */
+:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
+
+/* Gradient text utility */
+.gradient-text-blue {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Vercel-inspired gradients */
+.gradient-bg {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.gradient-bg-blue {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+}
+
+.gradient-bg-purple {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-border {
+  position: relative;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  border-radius: 8px;
+  padding: 1px;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  right: 1px;
+  bottom: 1px;
+  background: #111827;
+  border-radius: 7px;
+}
+
+/* Shine effect */
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.shine:hover::before {
+  left: 100%;
+}
+
+/* Grid pattern */
+.grid-pattern {
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Custom animations */
+@keyframes animate-gradient-x {
+  0%, 100% {
+    background-size: 200% 200%;
+    background-position: left center;
+  }
+  50% {
+    background-size: 200% 200%;
+    background-position: right center;
+  }
+}
+
+.animate-gradient-x {
+  animation: animate-gradient-x 3s ease infinite;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Font smoothing */
+.font-sans {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Backdrop blur utilities */
+.backdrop-blur-xl {
+  backdrop-filter: blur(24px);
+}
+
+.backdrop-blur-lg {
+  backdrop-filter: blur(16px);
+}
+
+/* Shadow utilities */
+.shadow-blue-500\/20 {
+  box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.2);
+}
+
+.shadow-purple-500\/20 {
+  box-shadow: 0 25px 50px -12px rgba(139, 92, 246, 0.2);
+}
+
+.shadow-pink-500\/20 {
+  box-shadow: 0 25px 50px -12px rgba(236, 72, 153, 0.2);
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px -4px rgba(59, 130, 246, 0.1);
+}
+
+/* Glow effects */
+.glow-blue {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+}
+
+/* Button variants */
+.btn-gradient {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-gradient:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
+}
+
+/* Animated backgrounds */
+.animated-bg {
+  background: linear-gradient(-45deg, #1e1e1e, #2d3748, #1e1e1e, #374151);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Text shimmer effect */
+.text-shimmer {
+  background: linear-gradient(90deg, #ffffff 0%, #a8a8a8 50%, #ffffff 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Programming Language Color Scheme */
+.lang-javascript { background: linear-gradient(135deg, #f7df1e 0%, #f5d800 100%); color: #000; }
+.lang-typescript { background: linear-gradient(135deg, #3178c6 0%, #2d5aa0 100%); color: #fff; }
+.lang-python { background: linear-gradient(135deg, #3776ab 0%, #2d5aa0 100%); color: #fff; }
+.lang-java { background: linear-gradient(135deg, #ed8b00 0%, #d4730b 100%); color: #fff; }
+.lang-react { background: linear-gradient(135deg, #61dafb 0%, #21a1c4 100%); color: #000; }
+.lang-vue { background: linear-gradient(135deg, #4fc08d 0%, #42a575 100%); color: #fff; }
+.lang-angular { background: linear-gradient(135deg, #dd0031 0%, #c5002b 100%); color: #fff; }
+.lang-nodejs { background: linear-gradient(135deg, #339933 0%, #2d7d2d 100%); color: #fff; }
+.lang-cpp { background: linear-gradient(135deg, #00599c 0%, #004d87 100%); color: #fff; }
+.lang-csharp { background: linear-gradient(135deg, #239120 0%, #1e7d1e 100%); color: #fff; }
+.lang-php { background: linear-gradient(135deg, #777bb4 0%, #6b6b9e 100%); color: #fff; }
+.lang-go { background: linear-gradient(135deg, #00add8 0%, #00a0c4 100%); color: #fff; }
+.lang-rust { background: linear-gradient(135deg, #000000 0%, #d2691e 100%); color: #fff; }
+.lang-swift { background: linear-gradient(135deg, #fa7343 0%, #f5633a 100%); color: #fff; }
+.lang-kotlin { background: linear-gradient(135deg, #0095d5 0%, #0083c2 100%); color: #fff; }
+.lang-dart { background: linear-gradient(135deg, #0175c2 0%, #0062a8 100%); color: #fff; }
+.lang-ruby { background: linear-gradient(135deg, #cc342d 0%, #b82e26 100%); color: #fff; }
+.lang-sql { background: linear-gradient(135deg, #336791 0%, #2d5678 100%); color: #fff; }
+.lang-html { background: linear-gradient(135deg, #e34f26 0%, #d4431f 100%); color: #fff; }
+.lang-css { background: linear-gradient(135deg, #1572b6 0%, #0e5a8a 100%); color: #fff; }
+.lang-sass { background: linear-gradient(135deg, #cf649a 0%, #b8578a 100%); color: #fff; }
+.lang-mongodb { background: linear-gradient(135deg, #47a248 0%, #3d8b3d 100%); color: #fff; }
+.lang-mysql { background: linear-gradient(135deg, #4479a1 0%, #3a6885 100%); color: #fff; }
+.lang-postgresql { background: linear-gradient(135deg, #336791 0%, #2d5678 100%); color: #fff; }
+.lang-docker { background: linear-gradient(135deg, #2496ed 0%, #1e7bcc 100%); color: #fff; }
+.lang-kubernetes { background: linear-gradient(135deg, #326ce5 0%, #2856c2 100%); color: #fff; }
+.lang-aws { background: linear-gradient(135deg, #ff9900 0%, #e68a00 100%); color: #fff; }
+.lang-tensorflow { background: linear-gradient(135deg, #ff6f00 0%, #e65100 100%); color: #fff; }
+.lang-pytorch { background: linear-gradient(135deg, #ee4c2c 0%, #d6431f 100%); color: #fff; }
+.lang-flutter { background: linear-gradient(135deg, #02569b 0%, #1f4788 100%); color: #fff; }
+.lang-default { background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%); color: #fff; }
+
+/* Language tag utility function */
+.lang-tag {
+  @apply px-2 py-1 rounded-full text-xs font-medium inline-block;
+}
