@@ -71,12 +71,12 @@ export default function ProjectsPage() {
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch('/api/projects');
+      const response = await fetch('http://localhost:5000/api/projects');
       if (!response.ok) {
         throw new Error('Failed to fetch projects');
       }
       const result = await response.json();
-      setProjects(result.data || []);
+      setProjects(result.data?.projects || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -132,7 +132,7 @@ export default function ProjectsPage() {
         return;
       }
 
-      const response = await fetch(`/api/projects/${projectId}/like`, {
+      const response = await fetch(`http://localhost:5000/api/projects/${projectId}/like`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -176,6 +176,9 @@ export default function ProjectsPage() {
               </Link>
             </div>
             <div className="flex items-center space-x-4">
+              <Link href="/my-projects" className="text-gray-300 hover:text-white transition-colors">
+                My Projects
+              </Link>
               <Link href="/submit" className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:from-blue-500 hover:to-purple-500 transition-all duration-200 transform hover:scale-105">
                 Submit Project
               </Link>
@@ -330,7 +333,7 @@ function ProjectCard({ project, onLike }: ProjectCardProps) {
                 </Link>
               </h3>
               <p className="text-sm text-gray-400">
-                by {project.author.name}
+                by {project.ownerName || project.author.name}
               </p>
             </div>
           </div>

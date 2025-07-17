@@ -11,6 +11,7 @@ interface ProjectFormData {
   githubUrl: string;
   shortDescription: string;
   tags: string[];
+  category: string;
   logoUrl: string;
 }
 
@@ -37,6 +38,7 @@ export default function SubmitProjectPage() {
     githubUrl: '',
     shortDescription: '',
     tags: [],
+    category: '',
     logoUrl: ''
   });
   const [loading, setLoading] = useState(false);
@@ -76,7 +78,7 @@ export default function SubmitProjectPage() {
         throw new Error('Invalid GitHub URL format');
       }
 
-      const response = await fetch('/api/projects', {
+      const response = await fetch('http://localhost:5000/api/projects', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -87,6 +89,7 @@ export default function SubmitProjectPage() {
           description: formData.shortDescription,
           githubUrl: formData.githubUrl,
           tags: formData.tags,
+          category: formData.category,
           logoUrl: formData.logoUrl || undefined,
           ownerName: formData.ownerName
         })

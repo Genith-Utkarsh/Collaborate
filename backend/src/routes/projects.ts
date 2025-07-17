@@ -17,14 +17,16 @@ import { upload } from '../middleware/upload';
 
 const router = Router();
 
+// Protected routes that need to come before :id routes
+router.get('/my-projects', authenticate, getUserProjects);
+
 // Public routes
 router.get('/', getAllProjects);
 router.get('/:id', getProjectById);
 router.get('/:id/readme', getProjectReadme);
 router.get('/:id/contributors', getProjectContributors);
 
-// Protected routes
-router.get('/my-projects', authenticate, getUserProjects);
+// Other protected routes
 router.post('/', authenticate, upload.single('logo'), createProject);
 router.put('/:id', authenticate, upload.array('images', 5), updateProject);
 router.delete('/:id', authenticate, deleteProject);

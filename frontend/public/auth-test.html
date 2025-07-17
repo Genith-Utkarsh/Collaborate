@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white p-8">
+    <div class="max-w-md mx-auto">
+        <h1 class="text-2xl font-bold mb-6">Authentication Test</h1>
+        
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-2">Email:</label>
+                <input type="email" id="email" class="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white" value="test@vitpune.edu.in">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-2">Password:</label>
+                <input type="password" id="password" class="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white" value="password123">
+            </div>
+            
+            <button id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Login
+            </button>
+            
+            <button id="fetchProjects" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Fetch My Projects
+            </button>
+            
+            <button id="logout" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Logout
+            </button>
+        </div>
+        
+        <div id="output" class="mt-6 p-4 bg-gray-800 rounded-lg">
+            <h3 class="text-lg font-semibold mb-2">Output:</h3>
+            <pre id="outputContent" class="text-sm text-gray-300 overflow-auto max-h-64"></pre>
+        </div>
+    </div>
+
+    <script>
+        let token = localStorage.getItem('token');
+        
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password }),
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    token = result.data.token;
+                    localStorage.setItem('token', token);
+                    document.getElementById('outputContent').textContent = 'Login successful!\n' + JSON.stringify(result.data, null, 2);
+                } else {
+                    document.getElementById('outputContent').textContent = 'Login failed: ' + result.message;
+                }
+            } catch (error) {
+                document.getElementById('outputContent').textContent = 'Error: ' + error.message;
+            }
+        });
+        
+        document.getElementById('fetchProjects').addEventListener('click', async () => {
+            if (!token) {
+                document.getElementById('outputContent').textContent = 'Please login first';
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/projects/my-projects', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                
+                const result = await response.json();
+                document.getElementById('outputContent').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('outputContent').textContent = 'Error: ' + error.message;
+            }
+        });
+        
+        document.getElementById('logout').addEventListener('click', () => {
+            token = null;
+            localStorage.removeItem('token');
+            document.getElementById('outputContent').textContent = 'Logged out successfully';
+        });
+    </script>
+</body>
+</html>

@@ -44,10 +44,17 @@ export default function ProjectDetailPage() {
   const [activeTab, setActiveTab] = useState<'overview' | 'readme' | 'contributors'>('overview');
 
   useEffect(() => {
+    // Check if user is authenticated
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+
     if (params?.id) {
       fetchProject(params.id as string);
     }
-  }, [params?.id]);
+  }, [params?.id, router]);
 
   const fetchProject = async (projectId: string) => {
     try {

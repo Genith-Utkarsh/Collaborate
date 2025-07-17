@@ -20,6 +20,9 @@ export default function HomePage() {
               <Link href="/projects" className="text-gray-400 hover:text-white transition-colors text-sm">
                 Projects
               </Link>
+              <Link href="/my-projects" className="text-gray-400 hover:text-white transition-colors text-sm">
+                My Projects
+              </Link>
               <Link href="/about" className="text-gray-400 hover:text-white transition-colors text-sm">
                 About
               </Link>
