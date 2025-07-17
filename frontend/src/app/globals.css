@@ -257,37 +257,38 @@ a {
   }
 }
 
-/* Programming Language Color Scheme */
-.lang-javascript { background: linear-gradient(135deg, #f7df1e 0%, #f5d800 100%); color: #000; }
-.lang-typescript { background: linear-gradient(135deg, #3178c6 0%, #2d5aa0 100%); color: #fff; }
-.lang-python { background: linear-gradient(135deg, #3776ab 0%, #2d5aa0 100%); color: #fff; }
-.lang-java { background: linear-gradient(135deg, #ed8b00 0%, #d4730b 100%); color: #fff; }
-.lang-react { background: linear-gradient(135deg, #61dafb 0%, #21a1c4 100%); color: #000; }
-.lang-vue { background: linear-gradient(135deg, #4fc08d 0%, #42a575 100%); color: #fff; }
-.lang-angular { background: linear-gradient(135deg, #dd0031 0%, #c5002b 100%); color: #fff; }
-.lang-nodejs { background: linear-gradient(135deg, #339933 0%, #2d7d2d 100%); color: #fff; }
-.lang-cpp { background: linear-gradient(135deg, #00599c 0%, #004d87 100%); color: #fff; }
-.lang-csharp { background: linear-gradient(135deg, #239120 0%, #1e7d1e 100%); color: #fff; }
-.lang-php { background: linear-gradient(135deg, #777bb4 0%, #6b6b9e 100%); color: #fff; }
-.lang-go { background: linear-gradient(135deg, #00add8 0%, #00a0c4 100%); color: #fff; }
-.lang-rust { background: linear-gradient(135deg, #000000 0%, #d2691e 100%); color: #fff; }
-.lang-swift { background: linear-gradient(135deg, #fa7343 0%, #f5633a 100%); color: #fff; }
-.lang-kotlin { background: linear-gradient(135deg, #0095d5 0%, #0083c2 100%); color: #fff; }
-.lang-dart { background: linear-gradient(135deg, #0175c2 0%, #0062a8 100%); color: #fff; }
-.lang-ruby { background: linear-gradient(135deg, #cc342d 0%, #b82e26 100%); color: #fff; }
-.lang-sql { background: linear-gradient(135deg, #336791 0%, #2d5678 100%); color: #fff; }
-.lang-html { background: linear-gradient(135deg, #e34f26 0%, #d4431f 100%); color: #fff; }
-.lang-css { background: linear-gradient(135deg, #1572b6 0%, #0e5a8a 100%); color: #fff; }
-.lang-sass { background: linear-gradient(135deg, #cf649a 0%, #b8578a 100%); color: #fff; }
-.lang-mongodb { background: linear-gradient(135deg, #47a248 0%, #3d8b3d 100%); color: #fff; }
-.lang-mysql { background: linear-gradient(135deg, #4479a1 0%, #3a6885 100%); color: #fff; }
-.lang-postgresql { background: linear-gradient(135deg, #336791 0%, #2d5678 100%); color: #fff; }
-.lang-docker { background: linear-gradient(135deg, #2496ed 0%, #1e7bcc 100%); color: #fff; }
-.lang-kubernetes { background: linear-gradient(135deg, #326ce5 0%, #2856c2 100%); color: #fff; }
-.lang-aws { background: linear-gradient(135deg, #ff9900 0%, #e68a00 100%); color: #fff; }
-.lang-tensorflow { background: linear-gradient(135deg, #ff6f00 0%, #e65100 100%); color: #fff; }
-.lang-pytorch { background: linear-gradient(135deg, #ee4c2c 0%, #d6431f 100%); color: #fff; }
-.lang-flutter { background: linear-gradient(135deg, #02569b 0%, #1f4788 100%); color: #fff; }
+/* Programming Language Color Scheme - More vibrant and distinct */
+.lang-javascript { background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #000; font-weight: 600; }
+.lang-typescript { background: linear-gradient(135deg, #007ACC 0%, #0066CC 100%); color: #fff; font-weight: 600; }
+.lang-python { background: linear-gradient(135deg, #FF6B6B 0%, #FF5252 100%); color: #fff; font-weight: 600; }
+.lang-java { background: linear-gradient(135deg, #FF8C00 0%, #FF7F00 100%); color: #fff; font-weight: 600; }
+.lang-react { background: linear-gradient(135deg, #00CED1 0%, #00BFFF 100%); color: #000; font-weight: 600; }
+.lang-vue { background: linear-gradient(135deg, #32CD32 0%, #228B22 100%); color: #fff; font-weight: 600; }
+.lang-angular { background: linear-gradient(135deg, #DC143C 0%, #B22222 100%); color: #fff; font-weight: 600; }
+.lang-nodejs { background: linear-gradient(135deg, #90EE90 0%, #32CD32 100%); color: #000; font-weight: 600; }
+.lang-cpp { background: linear-gradient(135deg, #4169E1 0%, #191970 100%); color: #fff; font-weight: 600; }
+.lang-csharp { background: linear-gradient(135deg, #9932CC 0%, #8A2BE2 100%); color: #fff; font-weight: 600; }
+.lang-php { background: linear-gradient(135deg, #DDA0DD 0%, #DA70D6 100%); color: #000; font-weight: 600; }
+.lang-go { background: linear-gradient(135deg, #00FFFF 0%, #00CED1 100%); color: #000; font-weight: 600; }
+.lang-rust { background: linear-gradient(135deg, #FF4500 0%, #DC143C 100%); color: #fff; font-weight: 600; }
+.lang-swift { background: linear-gradient(135deg, #FF69B4 0%, #FF1493 100%); color: #fff; font-weight: 600; }
+.lang-kotlin { background: linear-gradient(135deg, #9370DB 0%, #7B68EE 100%); color: #fff; font-weight: 600; }
+.lang-dart { background: linear-gradient(135deg, #87CEEB 0%, #4682B4 100%); color: #000; font-weight: 600; }
+.lang-ruby { background: linear-gradient(135deg, #FF0000 0%, #DC143C 100%); color: #fff; font-weight: 600; }
+.lang-sql { background: linear-gradient(135deg, #20B2AA 0%, #008B8B 100%); color: #fff; font-weight: 600; }
+.lang-html { background: linear-gradient(135deg, #FF6347 0%, #FF4500 100%); color: #fff; font-weight: 600; }
+.lang-css { background: linear-gradient(135deg, #1E90FF 0%, #0000FF 100%); color: #fff; font-weight: 600; }
+.lang-sass { background: linear-gradient(135deg, #FF69B4 0%, #FF1493 100%); color: #fff; font-weight: 600; }
+.lang-mongodb { background: linear-gradient(135deg, #228B22 0%, #006400 100%); color: #fff; font-weight: 600; }
+.lang-mysql { background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%); color: #000; font-weight: 600; }
+.lang-postgresql { background: linear-gradient(135deg, #4169E1 0%, #0000CD 100%); color: #fff; font-weight: 600; }
+.lang-docker { background: linear-gradient(135deg, #00BFFF 0%, #0080FF 100%); color: #fff; font-weight: 600; }
+.lang-kubernetes { background: linear-gradient(135deg, #326CE5 0%, #1E3A8A 100%); color: #fff; font-weight: 600; }
+.lang-aws { background: linear-gradient(135deg, #FF9900 0%, #FF6600 100%); color: #fff; font-weight: 600; }
+.lang-tensorflow { background: linear-gradient(135deg, #FF6F00 0%, #FF5722 100%); color: #fff; font-weight: 600; }
+.lang-pytorch { background: linear-gradient(135deg, #EE4C2C 0%, #FF3D00 100%); color: #fff; font-weight: 600; }
+.lang-flutter { background: linear-gradient(135deg, #02569B 0%, #01579B 100%); color: #fff; font-weight: 600; }
+.lang-default { background: linear-gradient(135deg, #6B7280 0%, #4B5563 100%); color: #fff; font-weight: 600; }
 .lang-default { background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%); color: #fff; }
 
 /* Language tag utility function */

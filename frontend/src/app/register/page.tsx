@@ -52,6 +52,13 @@ export default function RegisterPage() {
     setIsLoading(true);
     setError('');
 
+    // Validate required fields
+    if (!formData.name || !formData.email || !formData.password || !formData.year || !formData.branch) {
+      setError('Please fill in all required fields');
+      setIsLoading(false);
+      return;
+    }
+
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
@@ -71,7 +78,7 @@ export default function RegisterPage() {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        year: parseInt(formData.year) || 1,
+        year: formData.year, // Send as string, not number
         branch: formData.branch,
         bio: formData.bio,
         skills: formData.skills.split(',').map(skill => skill.trim()).filter(Boolean)

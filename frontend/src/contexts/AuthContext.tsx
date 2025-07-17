@@ -14,7 +14,7 @@ interface AuthContextType {
     name: string;
     email: string;
     password: string;
-    year: number;
+    year: string;
     branch: string;
     bio?: string;
     skills?: string[];
@@ -93,7 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     name: string;
     email: string;
     password: string;
-    year: number;
+    year: string;
     branch: string;
     bio?: string;
     skills?: string[];
@@ -102,7 +102,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(true);
       const response = await api.register({
         ...userData,
-        year: userData.year.toString(),
+        year: userData.year, // Keep as string since backend expects string
       }) as { data: { user: User; token: string } };
       
       const { user: newUser, token: authToken } = response.data;
