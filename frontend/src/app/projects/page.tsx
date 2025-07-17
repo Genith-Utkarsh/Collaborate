@@ -13,7 +13,7 @@ interface Project {
   githubUrl: string;
   tags: string[];
   logoUrl?: string;
-  author: {
+  author?: {
     _id: string;
     username: string;
     name: string;
@@ -71,7 +71,7 @@ export default function ProjectsPage() {
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/projects');
+      const response = await fetch('http://localhost:5001/api/projects');
       if (!response.ok) {
         throw new Error('Failed to fetch projects');
       }
@@ -92,7 +92,7 @@ export default function ProjectsPage() {
       filtered = filtered.filter(project =>
         project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         project.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        project.author.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (project.author?.name || project.ownerName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
         project.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
       );
     }
@@ -132,7 +132,7 @@ export default function ProjectsPage() {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/api/projects/${projectId}/like`, {
+      const response = await fetch(`http://localhost:5001/api/projects/${projectId}/like`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -359,7 +359,7 @@ function ProjectCard({ project, onLike }: ProjectCardProps) {
                 </Link>
               </h3>
               <p className="text-sm text-gray-400">
-                by {project.ownerName || project.author.name}
+                by {project.ownerName || project.author?.name || 'Unknown'}
               </p>
             </div>
           </div>

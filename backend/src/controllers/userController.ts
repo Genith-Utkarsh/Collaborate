@@ -35,6 +35,45 @@ export const getUserProfile = async (req: Request, res: Response): Promise<void>
   }
 };
 
+// Get current user profile
+export const getCurrentUser = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    if (!req.user) {
+      res.status(401).json({
+        status: 'error',
+        message: 'User not authenticated'
+      });
+      return;
+    }
+
+    const user = await User.findById(req.user.id)
+      .select('-password')
+      .populate('followers', 'name avatar')
+      .populate('following', 'name avatar');
+    
+    if (!user) {
+      res.status(404).json({
+        status: 'error',
+        message: 'User not found'
+      });
+      return;
+    }
+    
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user
+      }
+    });
+  } catch (error) {
+    console.error('Get current user error:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal server error'
+    });
+  }
+};
+
 // Update user profile
 export const updateProfile = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
