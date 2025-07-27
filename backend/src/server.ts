@@ -105,6 +105,41 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
+// Database connection test endpoint
+app.get('/api/test/db', async (_req, res) => {
+  try {
+    const mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'MONGODB_URI environment variable is not set',
+        hasMongoUri: false,
+        mongoUriLength: 0
+      });
+    }
+
+    // Test the connection
+    const dbState = mongoose.connection.readyState;
+    const stateNames = ['disconnected', 'connected', 'connecting', 'disconnecting'];
+    
+    return res.status(200).json({
+      status: 'info',
+      message: 'Database connection test',
+      hasMongoUri: true,
+      mongoUriLength: mongoUri.length,
+      mongoUriPrefix: mongoUri.substring(0, 20) + '...',
+      connectionState: stateNames[dbState] || 'unknown',
+      connectionStateCode: dbState
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: 'error',
+      message: 'Database test failed',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+});
+
 // Debug endpoint to list available routes
 app.get('/api/debug/routes', (_req, res) => {
   res.status(200).json({
