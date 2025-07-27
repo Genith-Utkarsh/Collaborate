@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 interface ApiResponse<T = any> {
   status: 'success' | 'error';
@@ -12,7 +12,7 @@ class ApiService {
   private token: string | null = null;
 
   constructor() {
-    this.baseURL = API_BASE_URL;
+    this.baseURL = `${API_BASE_URL}/api`;
     // Get token from localStorage if available
     if (typeof window !== 'undefined') {
       this.token = localStorage.getItem('auth_token');

@@ -40,7 +40,7 @@ export default function DashboardPage() {
       const token = localStorage.getItem('auth_token');
       
       // Fetch user's projects
-      const projectsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/projects/my-projects`, {
+      const projectsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/projects/my-projects`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
