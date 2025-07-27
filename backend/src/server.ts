@@ -77,6 +77,16 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
+// Health check endpoint (works without database)
+app.get('/api/health', (_req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    message: 'Server is running',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'unknown'
+  });
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
@@ -106,30 +116,44 @@ async function connectDB() {
   try {
     const mongoUri = process.env.MONGODB_URI;
     if (!mongoUri) {
-      throw new Error('MONGODB_URI is not defined in environment variables');
+      console.error('❌ MONGODB_URI is not defined in environment variables');
+      console.error('⚠️  Server will start without database connection');
+      console.error('📝 Please configure MONGODB_URI in your Render environment variables');
+      return false;
     }
 
     await mongoose.connect(mongoUri);
     console.log('✅ Connected to MongoDB');
+    return true;
   } catch (error) {
     console.error('❌ MongoDB connection error:', error);
-    process.exit(1);
+    console.error('⚠️  Server will start without database connection');
+    return false;
   }
 }
 
 // Start server
 async function startServer() {
   try {
-    await connectDB();
+    const dbConnected = await connectDB();
     
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
       console.log(`📱 Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`🌐 CORS enabled for: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
+      
+      if (!dbConnected) {
+        console.log('⚠️  Database not connected - some features may not work');
+        console.log('🔧 Health check available at /api/health');
+      }
     });
   } catch (error) {
     console.error('❌ Failed to start server:', error);
-    process.exit(1);
+    // Don't exit process - let the server start anyway
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT} (without database)`);
+      console.log('🔧 Health check available at /api/health');
+    });
   }
 }
 
