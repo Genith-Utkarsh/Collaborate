@@ -53,6 +53,14 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Request logging middleware
+app.use((req, _res, next) => {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.originalUrl}`);
+  }
+  next();
+});
+
 // Session middleware for passport
 app.use(session({
   secret: process.env.SESSION_SECRET || 'collaborate-session-secret',
@@ -87,16 +95,68 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
+// Debug endpoint to list available routes
+app.get('/api/debug/routes', (_req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    message: 'Available API routes',
+    routes: {
+      auth: [
+        'POST /api/auth/register',
+        'POST /api/auth/login',
+        'POST /api/auth/refresh',
+        'GET /api/auth/github',
+        'GET /api/auth/github/callback',
+        'GET /api/auth/me'
+      ],
+      projects: [
+        'GET /api/projects',
+        'GET /api/projects/:id',
+        'GET /api/projects/:id/readme',
+        'GET /api/projects/:id/contributors',
+        'GET /api/projects/my-projects',
+        'POST /api/projects',
+        'PUT /api/projects/:id',
+        'DELETE /api/projects/:id',
+        'POST /api/projects/:id/like',
+        'POST /api/projects/:id/comments',
+        'POST /api/projects/:id/refresh-github'
+      ],
+      users: [
+        'GET /api/users/profile',
+        'PUT /api/users/profile',
+        'GET /api/users/:id',
+        'POST /api/users/:id/follow',
+        'POST /api/users/:id/unfollow'
+      ],
+      system: [
+        'GET /api/health',
+        'GET /api/debug/routes'
+      ]
+    }
+  });
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/users', userRoutes);
 
 // 404 handler
-app.use('*', (_req, res) => {
+app.use('*', (req, res) => {
   res.status(404).json({
     status: 'error',
     message: 'API endpoint not found',
+    requestedUrl: req.originalUrl,
+    method: req.method,
+    availableEndpoints: {
+      health: 'GET /api/health',
+      routes: 'GET /api/debug/routes',
+      auth: 'GET|POST /api/auth/*',
+      projects: 'GET|POST|PUT|DELETE /api/projects/*',
+      users: 'GET|POST|PUT /api/users/*'
+    },
+    tip: 'Visit /api/debug/routes for a complete list of available endpoints'
   });
 });
 
