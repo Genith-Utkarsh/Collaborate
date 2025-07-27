@@ -82,6 +82,7 @@ app.get('/', (_req, res) => {
     status: 'success',
     message: 'Welcome to Collaborate API',
     version: '1.0.0',
+    timestamp: new Date().toISOString(),
     endpoints: {
       health: '/api/health',
       routes: '/api/debug/routes',
@@ -89,7 +90,8 @@ app.get('/', (_req, res) => {
       projects: '/api/projects/*',
       users: '/api/users/*'
     },
-    documentation: 'Visit /api/debug/routes for detailed endpoint information'
+    documentation: 'Visit /api/debug/routes for detailed endpoint information',
+    deployment: 'Updated endpoint - should work now!'
   });
 });
 
