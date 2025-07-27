@@ -76,12 +76,20 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Health check endpoint
-app.get('/api/health', (_req, res) => {
+// Root endpoint
+app.get('/', (_req, res) => {
   res.status(200).json({
-    status: 'OK',
-    message: 'Collaborate API is running',
-    timestamp: new Date().toISOString(),
+    status: 'success',
+    message: 'Welcome to Collaborate API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/api/health',
+      routes: '/api/debug/routes',
+      auth: '/api/auth/*',
+      projects: '/api/projects/*',
+      users: '/api/users/*'
+    },
+    documentation: 'Visit /api/debug/routes for detailed endpoint information'
   });
 });
 
