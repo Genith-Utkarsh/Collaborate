@@ -33,7 +33,8 @@ app.use(limiter);
 const allowedOrigins = [
   'http://localhost:3000', // Development
   'http://localhost:3001', // Development fallback
-  process.env.FRONTEND_URL, // Production Vercel URL
+  'https://gitxcollab.vercel.app', // Production Vercel URL
+  process.env.FRONTEND_URL, // Additional production URL from env
 ].filter(Boolean); // Remove undefined values
 
 app.use(cors({
