@@ -123,6 +123,9 @@ app.get('/api/test/db', async (_req, res) => {
     const dbState = mongoose.connection.readyState;
     const stateNames = ['disconnected', 'connected', 'connecting', 'disconnecting'];
     
+    // Try a simple database operation
+    const testQuery = await mongoose.connection.db?.admin().ping();
+    
     return res.status(200).json({
       status: 'info',
       message: 'Database connection test',
@@ -130,12 +133,42 @@ app.get('/api/test/db', async (_req, res) => {
       mongoUriLength: mongoUri.length,
       mongoUriPrefix: mongoUri.substring(0, 20) + '...',
       connectionState: stateNames[dbState] || 'unknown',
-      connectionStateCode: dbState
+      connectionStateCode: dbState,
+      pingResult: testQuery,
+      databaseName: mongoose.connection.name
     });
   } catch (error) {
     return res.status(500).json({
       status: 'error',
       message: 'Database test failed',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
+});
+
+// Registration test endpoint
+app.post('/api/test/register', async (req, res) => {
+  try {
+    console.log('Test registration endpoint hit');
+    console.log('Request body:', req.body);
+    
+    // Just test if we can create a simple test document
+    const testData = {
+      test: true,
+      timestamp: new Date(),
+      body: req.body
+    };
+    
+    res.status(200).json({
+      status: 'success',
+      message: 'Test registration endpoint working',
+      data: testData,
+      mongodb_connected: mongoose.connection.readyState === 1
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Test registration failed',
       error: error instanceof Error ? error.message : 'Unknown error'
     });
   }

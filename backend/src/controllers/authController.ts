@@ -90,11 +90,27 @@ const generateToken = (userId: string): string => {
 // Register user
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
+    console.log('Registration attempt started');
+    console.log('Request body:', JSON.stringify(req.body, null, 2));
+    
     const { name, email, password, year, branch, bio, skills } = req.body;
 
+    // Validate required fields
+    if (!name || !email || !password || !year || !branch) {
+      console.log('Missing required fields');
+      res.status(400).json({
+        status: 'error',
+        message: 'Missing required fields: name, email, password, year, branch'
+      });
+      return;
+    }
+
+    console.log('Checking for existing user with email:', email);
+    
     // Check if user already exists
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
+      console.log('User already exists with email:', email);
       res.status(400).json({
         status: 'error',
         message: 'User with this email already exists'
@@ -102,6 +118,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    console.log('Creating new user...');
+    
     // Create new user
     const user = new User({
       name,
@@ -110,26 +128,42 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       year,
       branch,
       bio,
-      skills: skills || []
+      skills: skills || [],
+      authProvider: 'local' // Explicitly set auth provider
     });
 
+    console.log('User object created, attempting to save...');
     await user.save();
+    console.log('User saved successfully');
 
     // Generate token
     const token = generateToken(user._id.toString());
+    console.log('Token generated successfully');
 
     res.status(201).json({
       status: 'success',
       message: 'User registered successfully',
       data: {
-        user,
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          year: user.year,
+          branch: user.branch,
+          bio: user.bio,
+          skills: user.skills
+        },
         token
       }
     });
   } catch (error: any) {
     console.error('Registration error:', error);
+    console.error('Error name:', error.name);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
     
     if (error.name === 'ValidationError') {
+      console.log('Validation error details:', error.errors);
       const errors = Object.values(error.errors).map((err: any) => err.message);
       res.status(400).json({
         status: 'error',
@@ -139,9 +173,19 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    if (error.name === 'MongooseError' || error.name === 'MongoError') {
+      console.log('Database connection error');
+      res.status(500).json({
+        status: 'error',
+        message: 'Database connection error. Please try again later.'
+      });
+      return;
+    }
+
     res.status(500).json({
       status: 'error',
-      message: 'Internal server error during registration'
+      message: 'Internal server error during registration',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 };
