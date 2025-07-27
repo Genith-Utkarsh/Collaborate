@@ -3,14 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { User, Users, Code, Heart, Plus, TrendingUp, Calendar, Github, Star, GitFork } from 'lucide-react';
+import { User, Users, Code, Heart, Plus, TrendingUp, Calendar, Star, GitFork } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface DashboardStats {
   totalProjects: number;
   totalLikes: number;
   totalViews: number;
-  recentProjects: any[];
+  recentProjects: Array<Record<string, unknown>>;
 }
 
 export default function DashboardPage() {
@@ -50,8 +50,8 @@ export default function DashboardPage() {
         const projectsData = await projectsResponse.json();
         const projects = projectsData.data?.projects || [];
         
-        const totalLikes = projects.reduce((sum: number, project: any) => sum + (project.likes?.length || 0), 0);
-        const totalViews = projects.reduce((sum: number, project: any) => sum + (project.views || 0), 0);
+        const totalLikes = projects.reduce((sum: number, project: Record<string, unknown>) => sum + ((project.likes as unknown[])?.length || 0), 0);
+        const totalViews = projects.reduce((sum: number, project: Record<string, unknown>) => sum + ((project.views as number) || 0), 0);
         
         setStats({
           totalProjects: projects.length,
