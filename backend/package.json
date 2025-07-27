@@ -7,8 +7,9 @@
     "start": "node dist/server.js",
     "dev": "npm run build && nodemon dist/server.js",
     "dev-ts": "nodemon --exec ts-node src/server.ts",
-    "build": "tsc",
-    "watch": "tsc -w"
+    "build": "tsc && echo 'Build completed successfully'",
+    "watch": "tsc -w",
+    "postinstall": "npm run build"
   },
   "keywords": [
     "nodejs",
