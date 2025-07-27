@@ -17,18 +17,18 @@ interface ProjectFormData {
 }
 
 const POPULAR_TAGS = [
-  'Web Development',
-  'Mobile App',
-  'Machine Learning',
+  'Web',
+  'Mobile',
+  'ML',
   'AI',
   'Blockchain',
-  'DevOps',
-  'Game Development',
+  'DevTool',
+  'Game Dev',
   'IoT',
   'AR/VR',
   'Data Science',
-  'Cybersecurity',
-  'Cloud Computing'
+  'Web3',
+  'Other'
 ];
 
 export default function SubmitProjectPage() {
