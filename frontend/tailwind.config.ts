@@ -10,21 +10,13 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        // Prefer the user's system UI font stack
+        // Default to Comic Sans MS with sensible cursive fallbacks
         sans: [
-          'ui-sans-serif',
-          'system-ui',
-          '-apple-system',
-          'Segoe UI',
-          'Roboto',
-          'Noto Sans',
-          'Helvetica Neue',
-          'Arial',
-          'Apple Color Emoji',
-          'Segoe UI Emoji',
-          'Segoe UI Symbol',
-          'Noto Color Emoji',
-          'sans-serif',
+          'Comic Sans MS',
+          'Comic Sans',
+          'Chalkboard SE',
+          'Comic Neue',
+          'cursive',
         ],
       },
       colors: {
