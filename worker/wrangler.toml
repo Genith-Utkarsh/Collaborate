@@ -2,6 +2,7 @@ name = "collaborate-worker"
 compatibility_date = "2025-08-24"
 main = "src/index.ts"
 
-# Set secrets in Cloudflare:
-#   npx wrangler secret put DATABASE_URL
-#   npx wrangler secret put JWT_SECRET
+# Environment variables
+[vars]
+DATABASE_URL = "prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RfaWQiOjEsInNlY3VyZV9rZXkiOiJza19TSlNaXzVfMUNROWhpUUVEUHdiTk0iLCJhcGlfa2V5IjoiMDFLM0dZM0VRNFA3NUY0VzBYNjBLS01YQloiLCJ0ZW5hbnRfaWQiOiI1ZDU3ZDM0YjVmNDE2Y2JlYWZhM2E5YTM5YTU1ZjhlODNjNWYwNGMzNTAwNDJkZmQwZTJhMjhlMzgyNGRmYTAxIiwiaW50ZXJuYWxfc2VjcmV0IjoiYmI3YTNiMWUtYWEyOC00NWMzLWIyNWUtNzcwZDYyOWI0N2RjIn0.h3JVQeDbRQRBYJJNnY1OquALXpDgBhgzsmd6gsYLW9k"
+JWT_SECRET = "replace-me-in-prod"

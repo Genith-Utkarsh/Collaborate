@@ -79,3 +79,13 @@ auth.post('/refresh', async (c) => {
     return c.json({ status: 'error', message: 'Invalid token' }, 401);
   }
 });
+
+// GitHub OAuth stubs to preserve API shape
+auth.get('/github', (c) => {
+  return c.json({ status: 'error', message: 'GitHub OAuth not configured on Workers. Use email/password.' }, 501);
+});
+
+auth.get('/github/callback', (c) => {
+  const frontend = c.req.query('redirect') || c.req.header('X-Frontend-URL') || '/';
+  return c.redirect(`${frontend}?error=oauth_not_supported`);
+});
