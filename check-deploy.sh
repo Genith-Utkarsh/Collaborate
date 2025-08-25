@@ -11,8 +11,7 @@ echo "📋 Checking required deployment files..."
 files=(
     "frontend/vercel.json"
     "frontend/.env.example"
-    "backend/.env.example"
-    "backend/render.yaml"
+    "worker/wrangler.toml"
     "DEPLOYMENT.md"
 )
 
@@ -37,13 +36,7 @@ else
     errors=$((errors + 1))
 fi
 
-# Backend scripts
-if grep -q '"build"' backend/package.json && grep -q '"start"' backend/package.json; then
-    echo "✅ Backend build/start scripts"
-else
-    echo "❌ Backend missing build/start scripts"
-    errors=$((errors + 1))
-fi
+echo "✅ Backend (Workers) uses wrangler deploy"
 
 # Check environment variable examples
 echo ""
@@ -56,10 +49,10 @@ else
     errors=$((errors + 1))
 fi
 
-if grep -q "MONGODB_URI" backend/.env.example && grep -q "JWT_SECRET" backend/.env.example; then
-    echo "✅ Backend environment template"
+if grep -q "DATABASE_URL" worker/wrangler.toml; then
+    echo "✅ Worker config present"
 else
-    echo "❌ Backend environment template incomplete"
+    echo "❌ Worker config missing DATABASE_URL"
     errors=$((errors + 1))
 fi
 
@@ -71,6 +64,7 @@ sensitive_files=(
     ".env"
     "backend/.env"
     "frontend/.env"
+    "worker/wrangler.toml"
 )
 
 for file in "${sensitive_files[@]}"; do
@@ -86,9 +80,9 @@ if [ $errors -eq 0 ]; then
     echo ""
     echo "📝 Next steps:"
     echo "1. Review DEPLOYMENT.md for detailed instructions"
-    echo "2. Set up MongoDB Atlas database"
+    echo "2. Set up Prisma Accelerate Postgres"
     echo "3. Push code to GitHub"
-    echo "4. Deploy backend to Render"
+    echo "4. Deploy backend to Cloudflare Workers"
     echo "5. Deploy frontend to Vercel"
     echo "6. Configure environment variables"
 else

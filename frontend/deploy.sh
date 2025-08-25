@@ -17,6 +17,6 @@ npm run lint
 
 echo "✅ Build completed successfully!"
 echo "📝 Make sure to set the following environment variables in Vercel:"
-echo "   - NEXT_PUBLIC_API_URL: Your Render backend URL + /api"
+echo "   - NEXT_PUBLIC_API_URL: Your Cloudflare Worker base URL (no trailing /api)"
 echo ""
 echo "🌐 Deploy command: vercel --prod"

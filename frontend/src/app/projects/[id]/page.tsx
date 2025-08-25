@@ -58,7 +58,7 @@ export default function ProjectDetailPage() {
 
   const fetchProject = async (projectId: string) => {
     try {
-      const response = await fetch(`/api/projects/${projectId}`);
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/projects/${projectId}`);
       if (!response.ok) {
         throw new Error('Project not found');
       }
@@ -81,7 +81,7 @@ export default function ProjectDetailPage() {
         return;
       }
 
-      const response = await fetch(`/api/projects/${project._id}/like`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/projects/${project._id}/like`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
