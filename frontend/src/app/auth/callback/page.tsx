@@ -33,8 +33,8 @@ function AuthCallbackContent() {
     }
 
     if (token) {
-      // Store token and redirect to dashboard
-      localStorage.setItem('token', token);
+  // Store token and redirect to dashboard
+  localStorage.setItem('auth_token', token);
       
       // Fetch user data
       fetch('/api/auth/me', {

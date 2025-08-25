@@ -43,8 +43,8 @@ export default function LoginPage() {
         throw new Error(errorData.message || 'Login failed');
       }
 
-      const data = await response.json();
-      localStorage.setItem('token', data.token);
+  const data = await response.json();
+  localStorage.setItem('auth_token', data.data?.token || data.token);
       router.push('/projects');
     } catch (err: any) {
       setError(err.message || 'Login failed');

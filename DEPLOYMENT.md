@@ -1,6 +1,6 @@
 # Deployment Guide
 
-This guide covers deploying the Collaborate project with frontend on Vercel and backend on Render.
+This guide covers deploying the Collaborate project with frontend on Vercel and backend on Cloudflare Workers (Prisma Accelerate).
 
 ## 🚀 Frontend Deployment (Vercel)
 
@@ -26,7 +26,7 @@ This guide covers deploying the Collaborate project with frontend on Vercel and 
    - Go to your project dashboard → Settings → Environment Variables
    - Add these variables:
      ```
-     NEXT_PUBLIC_API_URL = https://your-backend-app.onrender.com/api
+   NEXT_PUBLIC_API_URL = https://<your-worker>.<your-account>.workers.dev
      ```
 
 4. **Deploy**
@@ -40,58 +40,34 @@ npm install
 npm run dev
 ```
 
-## 🌐 Backend Deployment (Render)
+## 🌐 Backend Deployment (Cloudflare Workers)
 
 ### Prerequisites
 - GitHub repository
-- Render account
-- MongoDB Atlas database
+- Cloudflare account
+- Prisma Accelerate Postgres database URL
 
 ### Steps
 
-1. **Prepare MongoDB Database**
-   - Create a MongoDB Atlas cluster
-   - Get your connection string
-   - Whitelist Render's IP addresses (or use 0.0.0.0/0 for all IPs)
+1. **Configure wrangler**
+   - Edit `worker/wrangler.toml` with your `DATABASE_URL` and `JWT_SECRET`.
+   - Optional: login with `npx wrangler login`.
 
-2. **Deploy to Render**
-   - Go to [render.com](https://render.com)
-   - Create a new Web Service
-   - Connect your GitHub repository
-   - Select the backend folder (if prompted)
+2. **Deploy to Cloudflare**
+   - From the `worker` folder run: `npm run deploy`.
+   - You will get a Workers URL like:
+     - https://collaborate-worker.buvautkarsh849.workers.dev
 
-3. **Configure Build Settings**
-   - **Build Command**: `npm install && npm run build`
-   - **Start Command**: `npm start`
-   - **Environment**: Node.js
-   - **Node Version**: 18.x
-
-4. **Set Environment Variables in Render**
-   Go to your service dashboard → Environment Variables and add:
-   ```
-   NODE_ENV=production
-   PORT=10000
-   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/collaborate
-   JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-   JWT_EXPIRES_IN=7d
-   FRONTEND_URL=https://your-frontend-app.vercel.app
-   SESSION_SECRET=collaborate-session-secret-change-in-production
-   GITHUB_CLIENT_ID=your-github-client-id (optional)
-   GITHUB_CLIENT_SECRET=your-github-client-secret (optional)
-   GITHUB_TOKEN=your-github-personal-access-token (optional)
-   ```
-
-5. **Deploy**
-   - Render will automatically build and deploy your backend
-   - Your API will be available at `https://your-backend-app.onrender.com`
+3. **Environment Variables**
+   If you need to rotate or manage secrets, use `wrangler secret put`.
 
 ### Health Check
-Your backend includes a health check endpoint at `/api/health` that Render uses to monitor your service.
+Your backend includes a health check endpoint at `/api/health` that returns a simple JSON status.
 
 ## 🔄 Post-Deployment Steps
 
 1. **Update Frontend Environment Variable**
-   - After backend deployment, update `NEXT_PUBLIC_API_URL` in Vercel with your actual Render URL
+   - After backend deployment, update `NEXT_PUBLIC_API_URL` in Vercel with your Workers URL
    - Redeploy the frontend
 
 2. **Test the Application**
@@ -105,13 +81,11 @@ Your backend includes a health check endpoint at `/api/health` that Render uses 
 ### Common Issues
 
 1. **CORS Errors**
-   - Ensure `FRONTEND_URL` in Render matches your Vercel URL exactly
-   - Check that both URLs use HTTPS in production
+   - The Worker uses permissive CORS for now. For production, restrict origins to your Vercel domain.
 
 2. **Database Connection Issues**
-   - Verify MongoDB connection string is correct
-   - Ensure database user has read/write permissions
-   - Check IP whitelist includes Render's IPs
+   - Verify Prisma Accelerate `DATABASE_URL` is correct and active
+   - Ensure the API key has access to the database
 
 3. **Environment Variables**
    - Double-check all required environment variables are set
@@ -122,11 +96,6 @@ Your backend includes a health check endpoint at `/api/health` that Render uses 
    - Check build logs in Render dashboard
    - Ensure all dependencies are listed in package.json
    - Verify Node.js version compatibility
-
-### Render Free Tier Limitations
-- Service spins down after 15 minutes of inactivity
-- First request after spin-down may be slow (cold start)
-- 750 hours per month limit
 
 ### Vercel Free Tier Limitations
 - 100GB bandwidth per month

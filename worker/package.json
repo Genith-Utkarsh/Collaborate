@@ -1,0 +1,28 @@
+{
+  "name": "collaborate-worker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --local",
+    "build": "wrangler deploy --dry-run",
+    "deploy": "wrangler deploy",
+    "prisma:generate": "prisma generate --no-engine",
+    "postinstall": "prisma generate --no-engine"
+  },
+  "dependencies": {
+    "@hono/zod-validator": "^0.2.0",
+  "@prisma/client": "^6.1.0",
+  "@prisma/extension-accelerate": "^1.2.0",
+    "bcryptjs": "^2.4.3",
+    "hono": "^4.6.8",
+    "jose": "^5.9.6"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240821.0",
+    "@types/bcryptjs": "^2.4.6",
+    "prisma": "^6.1.0",
+    "typescript": "^5.8.3",
+  "wrangler": "^4.32.0"
+  }
+}

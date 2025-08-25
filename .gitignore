@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+**/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -16,13 +17,22 @@
 # next.js
 /.next/
 /out/
+**/.next
+**/out
 
 # production
 /build
+**/build
 
 # misc
 .DS_Store
 *.pem
+.wrangler/
+**/.wrangler
+dist/
+**/dist
+.cache
+**/.cache
 
 # debug
 npm-debug.log*
@@ -38,6 +48,7 @@ yarn-error.log*
 .env.production.local
 */.env
 */.env.local
+**/.env*
 
 # vercel
 .vercel
@@ -45,3 +56,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+**/next-env.d.ts

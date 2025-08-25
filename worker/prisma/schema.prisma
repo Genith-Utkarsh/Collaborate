@@ -1,0 +1,107 @@
+// Prisma schema for Cloudflare Workers (PostgreSQL Accelerate)
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String   @id @default(uuid())
+  name           String
+  email          String   @unique
+  password       String?
+  avatar         String?
+  bio            String?
+  year           String
+  branch         String
+  githubProfile  String?
+  githubId       String?  @unique
+  githubUsername String?
+  linkedinProfile String?
+  portfolioUrl   String?
+  skills         String[]
+  isVerified     Boolean  @default(false)
+  role           String   @default("student")
+  authProvider   String   @default("local")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  projects       Project[] @relation("UserProjects")
+  comments       Comment[]
+
+  // Followers/Following many-to-many self-relation
+  followedBy     UserFollow[] @relation("FollowedBy")
+  following      UserFollow[] @relation("Following")
+
+  // Project likes
+  likedProjects  ProjectLike[]
+
+  // Project collaborations
+  collaborations ProjectCollaborator[]
+}
+
+model Project {
+  id            String    @id @default(uuid())
+  title         String
+  description   String
+  longDescription String?
+  ownerId       String?
+  owner         User?     @relation("UserProjects", fields: [ownerId], references: [id])
+  ownerName     String?
+  technologies  String[]
+  category      String
+  githubUrl     String
+  liveUrl       String?
+  images        String[]
+  comments      Comment[]
+  status        String   @default("active")
+  featured      Boolean  @default(false)
+  views         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Project likes
+  likes         ProjectLike[]
+
+  // Collaborators
+  collaborators ProjectCollaborator[]
+}
+// Join table for followers/following
+model UserFollow {
+  id         String  @id @default(uuid())
+  follower   User    @relation("Following", fields: [followerId], references: [id])
+  followerId String
+  following  User    @relation("FollowedBy", fields: [followingId], references: [id])
+  followingId String
+}
+
+// Join table for project likes
+model ProjectLike {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  project    Project  @relation(fields: [projectId], references: [id])
+  projectId  String
+}
+
+// Join table for project collaborators
+model ProjectCollaborator {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  project    Project  @relation(fields: [projectId], references: [id])
+  projectId  String
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id])
+  text      String
+  createdAt DateTime @default(now())
+}
