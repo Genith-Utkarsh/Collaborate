@@ -8,3 +8,14 @@
 
 Any contributions are welcome and appreciated.  
 If you like the project, **give it a ⭐ to show support!**
+
+
+
+
+
+
+** Features To be Added **
+1. Unique Id for each user
+2. Tagging People for group project
+3. Detail Info of Each Project
+4. Github SignUp/signin Oauth
