@@ -51,13 +51,19 @@ class ApiService {
 
     try {
       const response = await fetch(url, config);
-      const data = await response.json();
+      const text = await response.text();
+      let data: any = undefined;
+      try { data = text ? JSON.parse(text) : undefined; } catch { /* keep raw */ }
 
       if (!response.ok) {
-        throw new Error(data.message || 'API request failed');
+        const msg = (data && (data.message || data.error)) || 'API request failed';
+        const det = data && (data.detail || data.code || data.meta);
+        const err = new Error(det ? `${msg}: ${typeof det === 'string' ? det : JSON.stringify(det)}` : msg);
+        console.error('API request failed:', err);
+        throw err;
       }
 
-      return data;
+      return (data !== undefined ? data : ({} as any));
     } catch (error) {
       console.error('API request failed:', error);
       throw error;
