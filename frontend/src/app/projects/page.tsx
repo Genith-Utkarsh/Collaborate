@@ -25,7 +25,7 @@ interface Project {
     language: string;
     updatedAt: string;
   };
-  likes: string[];
+  likes: number | string[];
   likedBy: string[];
   createdAt: string;
 }
@@ -73,7 +73,7 @@ export default function ProjectsPage() {
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/projects`);
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/projects`);
       if (!response.ok) {
         throw new Error('Failed to fetch projects');
       }
@@ -113,8 +113,11 @@ export default function ProjectsPage() {
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         case 'oldest':
           return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-        case 'most-liked':
-          return b.likes.length - a.likes.length;
+        case 'most-liked': {
+          const aLikes = Array.isArray(a.likes) ? a.likes.length : (typeof a.likes === 'number' ? a.likes : 0);
+          const bLikes = Array.isArray(b.likes) ? b.likes.length : (typeof b.likes === 'number' ? b.likes : 0);
+          return bLikes - aLikes;
+        }
         case 'most-stars':
           return (b.githubData?.stars || 0) - (a.githubData?.stars || 0);
         default:
@@ -134,7 +137,7 @@ export default function ProjectsPage() {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/projects/${projectId}/like`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/projects/${projectId}/like`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -438,7 +441,7 @@ function ProjectCard({ project, onLike }: ProjectCardProps) {
               className="flex items-center space-x-1 text-gray-400 hover:text-red-400 transition-colors"
             >
               <Heart className="h-4 w-4" />
-              <span className="text-sm">{project.likes.length}</span>
+              <span className="text-sm">{Array.isArray(project.likes) ? project.likes.length : (typeof project.likes === 'number' ? project.likes : 0)}</span>
             </button>
             <span className="text-xs text-gray-500">
               {formatDate(project.createdAt)}

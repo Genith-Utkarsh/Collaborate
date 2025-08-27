@@ -1,4 +1,5 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+// Require a Worker URL at build/runtime; no localhost fallback to avoid hitting legacy servers
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL as string;
 
 interface ApiResponse<T = any> {
   status: 'success' | 'error';

@@ -58,12 +58,13 @@ export default function ProjectDetailPage() {
 
   const fetchProject = async (projectId: string) => {
     try {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/projects/${projectId}`);
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/projects/${projectId}`);
       if (!response.ok) {
         throw new Error('Project not found');
       }
-      const result = await response.json();
-      setProject(result.data);
+  const result = await response.json();
+  // Worker returns { data: { project, comments? } }
+  setProject(result.data?.project || result.data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -81,7 +82,7 @@ export default function ProjectDetailPage() {
         return;
       }
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/projects/${project._id}/like`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/projects/${project._id}/like`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -183,7 +184,7 @@ export default function ProjectDetailPage() {
               <div>
                 <h1 className="text-2xl font-bold mb-2">{project.title}</h1>
                 <p className="text-muted">
-                  Created by <span className="text-foreground font-medium">{project.author.name}</span>
+                  Created by <span className="text-foreground font-medium">{project.author?.name || (project as any).ownerName || 'Unknown'}</span>
                 </p>
               </div>
             </div>

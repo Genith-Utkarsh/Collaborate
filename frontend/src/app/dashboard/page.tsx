@@ -40,7 +40,7 @@ export default function DashboardPage() {
       const token = localStorage.getItem('auth_token');
       
       // Fetch user's projects
-      const projectsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/projects/my-projects`, {
+  const projectsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/projects/my-projects`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -49,10 +49,13 @@ export default function DashboardPage() {
       if (projectsResponse.ok) {
         const projectsData = await projectsResponse.json();
         const projects = projectsData.data?.projects || [];
-        
-        const totalLikes = projects.reduce((sum: number, project: Record<string, unknown>) => sum + ((project.likes as unknown[])?.length || 0), 0);
-        const totalViews = projects.reduce((sum: number, project: Record<string, unknown>) => sum + ((project.views as number) || 0), 0);
-        
+
+        const totalLikes = projects.reduce((sum: number, project: any) => {
+          const likes = Array.isArray(project.likes) ? project.likes.length : (typeof project.likes === 'number' ? project.likes : 0);
+          return sum + likes;
+        }, 0);
+        const totalViews = projects.reduce((sum: number, project: any) => sum + ((project.views as number) || 0), 0);
+
         setStats({
           totalProjects: projects.length,
           totalLikes,
@@ -271,6 +274,7 @@ export default function DashboardPage() {
                       <div className="flex items-center space-x-1">
                         <Heart className="w-4 h-4" />
                         <span>{project.likes?.length || 0}</span>
+                <span>{Array.isArray(project.likes) ? project.likes.length : (typeof project.likes === 'number' ? project.likes : 0)}</span>
                       </div>
                       <div className="flex items-center space-x-1">
                         <Star className="w-4 h-4" />

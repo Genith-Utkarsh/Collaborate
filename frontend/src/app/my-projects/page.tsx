@@ -21,7 +21,7 @@ interface Project {
     language: string;
     updatedAt: string;
   };
-  likes: string[];
+  likes: number | string[];
   createdAt: string;
 }
 
@@ -52,7 +52,7 @@ export default function MyProjectsPage() {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/projects/my-projects`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/projects/my-projects`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -76,7 +76,7 @@ export default function MyProjectsPage() {
 
     try {
       const token = localStorage.getItem('auth_token');
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/projects/${projectId}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/projects/${projectId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -354,7 +354,7 @@ function ProjectCard({ project, onDelete }: ProjectCardProps) {
           <div className="flex items-center space-x-3">
             <span className="flex items-center space-x-1 text-gray-400">
               <Heart className="h-4 w-4" />
-              <span className="text-sm">{project.likes.length}</span>
+              <span className="text-sm">{Array.isArray(project.likes) ? project.likes.length : (typeof project.likes === 'number' ? project.likes : 0)}</span>
             </span>
             <span className="text-xs text-gray-500">
               {formatDate(project.createdAt)}
