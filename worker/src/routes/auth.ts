@@ -12,39 +12,48 @@ type AppEnv = {
 export const auth = new Hono<AppEnv>();
 
 auth.post('/register', async (c) => {
-  const body = await c.req.json<{ name: string; email: string; password: string; year: string; branch: string; bio?: string; skills?: string[] }>().catch(() => null);
-  if (!body) return c.json({ status: 'error', message: 'Invalid JSON' }, 400);
-  const { name, email, password, year, branch, bio, skills } = body;
-  if (!name || !email || !password || !year || !branch) {
-    return c.json({ status: 'error', message: 'Missing required fields' }, 400);
+  try {
+    const body = await c.req.json<{ name: string; email: string; password: string; year: string; branch: string; bio?: string; skills?: string[] }>().catch(() => null);
+    if (!body) return c.json({ status: 'error', message: 'Invalid JSON' }, 400);
+    const { name, email, password, year, branch, bio, skills } = body;
+    if (!name || !email || !password || !year || !branch) {
+      return c.json({ status: 'error', message: 'Missing required fields' }, 400);
+    }
+    const normalizedEmail = email.trim().toLowerCase();
+    const prisma = getPrisma(c.env.DATABASE_URL);
+    const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
+    if (existing) return c.json({ status: 'error', message: 'Email already registered' }, 409);
+
+    const hash = await bcrypt.hash(password, 12);
+    const user = await prisma.user.create({
+      data: { name, email: normalizedEmail, password: hash, year, branch, bio: bio || undefined, skills: skills || [] }
+    });
+
+    const token = await signJwt({ sub: user.id, email: user.email, name: user.name, role: (user.role as any) || 'student' }, c.env.JWT_SECRET);
+    const safe = { ...user, password: undefined } as any;
+    return c.json({ status: 'success', data: { user: safe, token } });
+  } catch (e: any) {
+    return c.json({ status: 'error', message: 'Internal Server Error', detail: e?.message || String(e) }, 500);
   }
-
-  const prisma = getPrisma(c.env.DATABASE_URL);
-  const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) return c.json({ status: 'error', message: 'Email already registered' }, 409);
-
-  const hash = await bcrypt.hash(password, 12);
-  const user = await prisma.user.create({
-    data: { name, email, password: hash, year, branch, bio: bio || undefined, skills: skills || [] }
-  });
-
-  const token = await signJwt({ sub: user.id, email: user.email, name: user.name, role: (user.role as any) || 'student' }, c.env.JWT_SECRET);
-  const safe = { ...user, password: undefined };
-  return c.json({ status: 'success', data: { user: safe, token } });
 });
 
 auth.post('/login', async (c) => {
-  const body = await c.req.json<{ email: string; password: string }>().catch(() => null);
-  if (!body) return c.json({ status: 'error', message: 'Invalid JSON' }, 400);
-  const { email, password } = body;
-  const prisma = getPrisma(c.env.DATABASE_URL);
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user || !user.password) return c.json({ status: 'error', message: 'Invalid credentials' }, 401);
-  const ok = await bcrypt.compare(password, user.password);
-  if (!ok) return c.json({ status: 'error', message: 'Invalid credentials' }, 401);
-  const token = await signJwt({ sub: user.id, email: user.email, name: user.name, role: (user.role as any) || 'student' }, c.env.JWT_SECRET);
-  const safe = { ...user, password: undefined };
-  return c.json({ status: 'success', data: { user: safe, token } });
+  try {
+    const body = await c.req.json<{ email: string; password: string }>().catch(() => null);
+    if (!body) return c.json({ status: 'error', message: 'Invalid JSON' }, 400);
+    const { email, password } = body;
+    const normalizedEmail = email.trim().toLowerCase();
+    const prisma = getPrisma(c.env.DATABASE_URL);
+    const user = await prisma.user.findUnique({ where: { email: normalizedEmail } });
+    if (!user || !user.password) return c.json({ status: 'error', message: 'Invalid credentials' }, 401);
+    const ok = await bcrypt.compare(password, user.password);
+    if (!ok) return c.json({ status: 'error', message: 'Invalid credentials' }, 401);
+    const token = await signJwt({ sub: user.id, email: user.email, name: user.name, role: (user.role as any) || 'student' }, c.env.JWT_SECRET);
+    const safe = { ...user, password: undefined } as any;
+    return c.json({ status: 'success', data: { user: safe, token } });
+  } catch (e: any) {
+    return c.json({ status: 'error', message: 'Internal Server Error', detail: e?.message || String(e) }, 500);
+  }
 });
 
 auth.get('/me', async (c) => {
