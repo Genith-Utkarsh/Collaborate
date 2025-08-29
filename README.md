@@ -19,3 +19,4 @@ If you like the project, **give it a ⭐ to show support!**
 2. Tagging People for group project
 3. Detail Info of Each Project
 4. Github SignUp/signin Oauth
+5. Trending repo based on likes .. monthly/weekly etc
